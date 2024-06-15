@@ -32,7 +32,7 @@ $ yarn start:prod
 $ npx nestia swagger
 ```
 
-Open: [apidocs.html](dist%2Fpublic%2Fapidocs.html)[localhost/public/apiocs.html]
+Open: [apidocs.html](dist%2Fpublic%2Fapidocs.html)[localhost/public/apidocs.html]
 
 ## Test
 

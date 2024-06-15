@@ -1,5 +1,4 @@
 export interface ManyRecordsResponse<T> {
-  success: boolean;
   metadata: {
     total: number;
   };
@@ -7,25 +6,22 @@ export interface ManyRecordsResponse<T> {
 }
 
 export interface SingleRecordResponse<T> {
-  success: boolean;
   data: T;
 }
 
 export namespace ResponseWrap {
   export function many<T>(data: T[]): ManyRecordsResponse<T> {
     return {
-      success: true,
       metadata: {
         total: data.length,
       },
-      data: data,
+      data,
     };
   }
 
   export function single<T>(data: T): SingleRecordResponse<T> {
     return {
-      success: true,
-      data: data,
+      data,
     };
   }
 }
