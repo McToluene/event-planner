@@ -24,9 +24,8 @@ export class EventController {
     @Request() req,
     @TypedFormData.Body() event: EventDto.CreateEvent,
   ): Promise<SingleRecordResponse<EventDto.Root>> {
-    const entity = new EventDto.Root(event).getEntity();
     return this.eventService
-      .create(req.user, entity)
+      .create(req.user, event)
       .then((response) =>
         ResponseWrap.single(EventDto.createFromEntities(response)),
       );

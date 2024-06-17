@@ -41,6 +41,6 @@ export namespace EventDto {
     date: string & tags.Format<'date'>;
     color: string[];
     font: string[];
-    file: File;
+    files: File[];
   }
 }

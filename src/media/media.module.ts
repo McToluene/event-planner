@@ -7,5 +7,6 @@ import { CloudinaryProvider } from '@/common/utils/cloudinary/cloudinary.util';
 @Module({
   imports: [ConfigModule.forRoot()],
   providers: [MediaService, CloudinaryProvider, MediaProviderFactory],
+  exports: [MediaService],
 })
 export class MediaModule {}
