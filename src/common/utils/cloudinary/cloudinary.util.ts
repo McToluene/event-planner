@@ -7,7 +7,14 @@ import { UploadApiErrorResponse, UploadApiResponse, v2 } from 'cloudinary';
 @Injectable()
 export class CloudinaryProvider implements IMediaProvider {
   private readonly logger = new Logger(CloudinaryProvider.name);
-  constructor(private config: ConfigService) {}
+  constructor(private config: ConfigService) {
+    this.logger.debug('Cloudinary setup...');
+    v2.config({
+      cloud_name: this.config.get<string>('CLOUDINARY_CLOUD_NAME'),
+      api_key: this.config.get<string>('CLOUDINARY_API_KEY'),
+      api_secret: this.config.get<string>('CLOUDINARY_API_SECRET'),
+    });
+  }
 
   async uploadFile(
     file: File,
