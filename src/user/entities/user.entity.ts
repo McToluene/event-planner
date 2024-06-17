@@ -13,7 +13,7 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   avatar?: string;
 
-  @Column({ name: 'phone_number' })
+  @Column({ name: 'phone_number', nullable: true })
   phoneNumber: string;
 
   @Column({ name: 'password_hash', nullable: true })

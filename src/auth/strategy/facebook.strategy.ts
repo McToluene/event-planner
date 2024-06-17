@@ -26,6 +26,7 @@ export class FacebookStrategy extends PassportStrategy(
   }
 
   async validate(
+    request: any,
     accessToken: string,
     refreshToken: string,
     profile: Profile,
