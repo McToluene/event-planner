@@ -6,7 +6,7 @@ export enum OAuthProvidersEnum {
   GOOGLE = 'google',
   FACEBOOK = 'facebook',
 }
-@Entity('user_oauth')
+@Entity('user_oauths')
 export class UserOauth extends BaseEntity {
   @Column({
     name: 'oauthProvider',

@@ -11,29 +11,24 @@ export class UserService {
   ) {}
 
   async create(user: User): Promise<User> {
-    const newUser = await this.userRepository.save(user);
-    return newUser;
+    return this.userRepository.save(user);
   }
 
   async findById(userId: string): Promise<User | null> {
-    const user = await this.userRepository.findOneBy({ id: userId });
-    return user;
+    return this.userRepository.findOneBy({ id: userId });
   }
 
   async getByEmail(email: string): Promise<User | null> {
-    const user = await this.userRepository.findOneBy({ email: email });
-    return user;
+    return this.userRepository.findOneBy({ email: email });
   }
 
   async findByEmailOrPhoneNumber(username: string): Promise<User | null> {
-    const user = await this.userRepository.findOne({
+    return this.userRepository.findOne({
       where: [{ email: username }, { phoneNumber: username }],
     });
-    return user;
   }
 
   async update(user: User): Promise<User> {
-    const updatedUser = await this.userRepository.save(user);
-    return updatedUser;
+    return this.userRepository.save(user);
   }
 }

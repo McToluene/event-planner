@@ -3,4 +3,5 @@ export const STRATEGY_NAMES = {
   GOOGLE: 'google',
   APPLE: 'apple',
   LOCAL: 'local',
+  JWT: 'jwt',
 };
