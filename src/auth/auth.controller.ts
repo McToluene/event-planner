@@ -35,7 +35,7 @@ export class AuthController {
    * @operationId login
    * @param {AuthDto.LoginRequest} body - create listing request
    *
-   * @returns {Promise<SingleRecordResponse<AuthDto.AuthResponse>>} - created listing
+   * @returns {Promise<SingleRecordResponse<AuthDto.AuthResponse>>} - auth
    */
   @UseGuards(AuthGuard(STRATEGY_NAMES.LOCAL))
   @TypedRoute.Post('login')

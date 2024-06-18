@@ -11,6 +11,7 @@ export namespace EventDto {
     color: string[];
     font: string[];
     mediaUrls: string[];
+    url: string;
 
     getEntity() {
       const entity = new Event();
@@ -20,25 +21,28 @@ export namespace EventDto {
       entity.date = this.date;
       entity.font = this.font;
       entity.mediaUrls = this.mediaUrls;
+      entity.description = this.description;
       return entity;
     }
   }
 
-  export function createFromEntities(entity: Event) {
+  export function createFromEntities(entity: Event, url: string) {
     const dto: Root = new Root();
     dto.id = entity.id;
     dto.name = entity.name;
-    dto.date = entity.date;
+    dto.date = new Date(entity.date);
     dto.description = entity.description;
     dto.color = entity.color;
     dto.font = entity.font;
+    dto.mediaUrls = entity.mediaUrls;
+    dto.url = url;
     return dto;
   }
 
   export interface CreateEvent {
     name: string;
     description: string;
-    date: string & tags.Format<'date'>;
+    date: string & tags.Format<'date-time'>;
     color: string[];
     font: string[];
     files: File[];

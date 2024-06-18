@@ -18,6 +18,11 @@ export class EventService {
 
   async create(user: User, event: EventDto.CreateEvent): Promise<Event> {
     const existingEvent = await this.findByNameAndUser(user, event.name);
+    if (existingEvent != null)
+      throw new ConflictException(
+        `Event with name: '${event.name}' already exist`,
+      );
+
     const responses = await Promise.all(
       event.files.map((file) =>
         this.mediaService.upload(
@@ -35,20 +40,21 @@ export class EventService {
       )
       .map((response) => response.url);
 
-    if (existingEvent != null)
-      throw new ConflictException(
-        `Event with name: ${event.name} already exist`,
-      );
-
     const entity = new EventDto.Root(event).getEntity();
     entity.mediaUrls = urls;
-
+    entity.user = user;
     return this.eventRepository.save(entity);
   }
 
   async findByNameAndUser(user: User, name: string): Promise<Event | null> {
     return this.eventRepository.findOne({
       where: [{ name, user }],
+    });
+  }
+
+  async getEvents(user: User): Promise<Event[]> {
+    return this.eventRepository.find({
+      where: [{ user }],
     });
   }
 }

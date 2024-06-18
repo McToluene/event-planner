@@ -11,6 +11,13 @@ const NESTIA_CONFIG: INestiaConfig = {
   swagger: {
     output: 'dist/public/swagger.json',
     beautify: true,
+    security: {
+      bearer: {
+        type: 'apiKey',
+        name: 'Authorization',
+        in: 'header',
+      },
+    },
     servers: [
       {
         url: 'http://localhost:3000',

@@ -13,9 +13,6 @@ export class Event extends BaseEntity {
   @Column()
   description: string;
 
-  @Column()
-  url: string;
-
   @Column('text', { array: true })
   color: string[];
 
