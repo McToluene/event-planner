@@ -12,6 +12,8 @@ export namespace EventDto {
     font: string[];
     mediaUrls: string[];
     url: string;
+    createdAt: Date;
+    updatedAt: Date;
 
     getEntity() {
       const entity = new Event();
@@ -36,6 +38,8 @@ export namespace EventDto {
     dto.font = entity.font;
     dto.mediaUrls = entity.mediaUrls;
     dto.url = url;
+    dto.createdAt = entity.createdAt;
+    dto.updatedAt = entity.updatedAt;
     return dto;
   }
 
