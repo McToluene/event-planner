@@ -1,5 +1,6 @@
 import { AbstractDto } from '@/common/dto/abstract/abstract.dto';
 import { Event } from '../entity/event.entity';
+import { ItineraryDto } from './itinerary.dto';
 import { tags } from 'typia';
 
 export namespace EventDto {
@@ -14,6 +15,7 @@ export namespace EventDto {
     url: string;
     createdAt: Date;
     updatedAt: Date;
+    itineraries: ItineraryDto.Root[];
 
     getEntity() {
       const entity = new Event();
@@ -24,11 +26,14 @@ export namespace EventDto {
       entity.font = this.font;
       entity.mediaUrls = this.mediaUrls;
       entity.description = this.description;
+      entity.itineraries = this.itineraries.map((i) =>
+        new ItineraryDto.Root(i).getEntity(),
+      );
       return entity;
     }
   }
 
-  export function createFromEntities(entity: Event, url: string) {
+  export function createFromEntity(entity: Event, url: string) {
     const dto: Root = new Root();
     dto.id = entity.id;
     dto.name = entity.name;
@@ -40,10 +45,14 @@ export namespace EventDto {
     dto.url = url;
     dto.createdAt = entity.createdAt;
     dto.updatedAt = entity.updatedAt;
+    dto.itineraries = entity.itineraries.map((i) =>
+      ItineraryDto.createFromEntity(i),
+    );
     return dto;
   }
 
   export interface CreateEvent {
+    itineraries: ItineraryDto.CreateItinerary[];
     name: string;
     description: string;
     date: string & tags.Format<'date-time'>;

@@ -7,12 +7,16 @@ import { MediaService } from '@/media/media.service';
 import { MediaProviderEnum } from '@/common/interfaces/media.provide.type';
 import { ImageType } from '@/common/enum/image.type.enum';
 import { EventDto } from './dto/event.dto';
+import { Itinerary } from './entity/itinerary.entity';
+import { ItineraryDto } from './dto/itinerary.dto';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(Event)
     private eventRepository: Repository<Event>,
+    @InjectRepository(Itinerary)
+    private itenaryRepository: Repository<Itinerary>,
     private mediaService: MediaService,
   ) {}
 
@@ -40,10 +44,20 @@ export class EventService {
       )
       .map((response) => response.url);
 
-    const entity = new EventDto.Root(event).getEntity();
+    let entity = new EventDto.Root(event).getEntity();
     entity.mediaUrls = urls;
     entity.user = user;
-    return this.eventRepository.save(entity);
+
+    await this.eventRepository.manager.transaction(async (entityManager) => {
+      entity = await entityManager.save(entity);
+      if (entity) {
+        const itineraries = entity.itineraries.map((it) =>
+          new ItineraryDto.Root(it).getEntity(),
+        );
+        await this.itenaryRepository.save(itineraries);
+      }
+    });
+    return entity;
   }
 
   async findByNameAndUser(user: User, name: string): Promise<Event | null> {

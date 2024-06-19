@@ -36,7 +36,7 @@ export class EventController {
       .create(req.user, event)
       .then((response) =>
         ResponseWrap.single(
-          EventDto.createFromEntities(
+          EventDto.createFromEntity(
             response,
             this.config.get<string>('FRONTEND_URL') + response.id,
           ),
@@ -61,7 +61,7 @@ export class EventController {
       .then((events) =>
         ResponseWrap.many(
           events.map((ev) =>
-            EventDto.createFromEntities(
+            EventDto.createFromEntity(
               ev,
               this.config.get<string>('FRONTEND_URL') + ev.id,
             ),

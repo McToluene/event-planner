@@ -1,6 +1,7 @@
 import { BaseEntity } from '@/common/entity/base';
 import { User } from '@/user/entities/user.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { Itinerary } from './itinerary.entity';
 
 @Entity('events')
 export class Event extends BaseEntity {
@@ -22,6 +23,9 @@ export class Event extends BaseEntity {
   @Column('text', { name: 'media_urls', array: true })
   mediaUrls: string[];
 
-  @Column('text', { name: 'user_id' })
+  @Column({ name: 'user_id' })
   user: User;
+
+  @OneToMany(() => Itinerary, (itinerary) => itinerary.event)
+  itineraries: Itinerary[];
 }
