@@ -17,12 +17,10 @@ export class CloudinaryProvider implements IMediaProvider {
   }
 
   async uploadFile(
-    file: File,
+    file: Express.Multer.File,
     type: ImageType,
   ): Promise<{ url: string; publicId: string } | null> {
     try {
-      const fileBuffer = await file.arrayBuffer();
-      const buffer = Buffer.from(fileBuffer);
       const response: UploadApiResponse = await new Promise(
         (resolve, reject) => {
           const uploadStream = v2.uploader.upload_stream(
@@ -35,7 +33,7 @@ export class CloudinaryProvider implements IMediaProvider {
               else resolve(result);
             },
           );
-          uploadStream.end(buffer);
+          uploadStream.end(file.buffer);
         },
       );
 

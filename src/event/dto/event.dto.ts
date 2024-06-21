@@ -52,12 +52,11 @@ export namespace EventDto {
   }
 
   export interface CreateEvent {
-    itineraries: ItineraryDto.CreateItinerary[];
     name: string;
     description: string;
     date: string & tags.Format<'date-time'>;
     color: string[];
     font: string[];
-    files: File[];
+    itineraries: ItineraryDto.CreateItinerary[];
   }
 }

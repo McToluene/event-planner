@@ -1,11 +1,9 @@
 import { BaseEntity } from '@/common/entity/base';
-import { Column, Entity } from 'typeorm';
+import { Event } from './event.entity';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity('itineraries')
 export class Itinerary extends BaseEntity {
-  @Column({ name: 'event_id' })
-  event: Event;
-
   @Column({ name: 'start_time' })
   startTime: Date;
 
@@ -17,4 +15,7 @@ export class Itinerary extends BaseEntity {
 
   @Column({ nullable: true })
   description: string;
+
+  @ManyToOne(() => Event, (event) => event.itineraries, { onDelete: 'CASCADE' })
+  event: Event;
 }

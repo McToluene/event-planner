@@ -29,6 +29,7 @@ export namespace ItineraryDto {
 
   export function createFromEntity(entity: Itinerary) {
     const dto: Root = new Root();
+    dto.id = entity.id;
     dto.title = entity.title;
     dto.startTime = new Date(entity.startTime);
     dto.endTime = new Date(entity.endTime);

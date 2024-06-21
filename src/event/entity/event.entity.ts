@@ -1,6 +1,6 @@
 import { BaseEntity } from '@/common/entity/base';
 import { User } from '@/user/entities/user.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Itinerary } from './itinerary.entity';
 
 @Entity('events')
@@ -23,7 +23,7 @@ export class Event extends BaseEntity {
   @Column('text', { name: 'media_urls', array: true })
   mediaUrls: string[];
 
-  @Column({ name: 'user_id' })
+  @ManyToOne(() => User, (user) => user.events, { onDelete: 'CASCADE' })
   user: User;
 
   @OneToMany(() => Itinerary, (itinerary) => itinerary.event)

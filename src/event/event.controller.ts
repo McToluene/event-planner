@@ -1,4 +1,13 @@
-import { Controller, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  UseGuards,
+  Request,
+  Body,
+  MaxFileSizeValidator,
+  ParseFilePipe,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventDto } from './dto/event.dto';
 import {
@@ -6,10 +15,11 @@ import {
   ResponseWrap,
   SingleRecordResponse,
 } from '@/common/dto/abstract/response.abstract';
-import { TypedFormData, TypedRoute } from '@nestia/core';
+import { TypedRoute } from '@nestia/core';
 import { AuthGuard } from '@nestjs/passport';
 import { STRATEGY_NAMES } from '@/common/constants';
 import { ConfigService } from '@nestjs/config';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('event')
 export class EventController {
@@ -22,18 +32,25 @@ export class EventController {
    * Create an event.
    * @tag event
    * @operationId create
-   * @param {EventDto.CreateEvent} event - create listing request
+   * @param {EventDto.CreateEvent} event - create event request
    *
    * @returns {Promise<SingleRecordResponse<EventDto.Root>>} - created event
    */
   @TypedRoute.Post()
   @UseGuards(AuthGuard(STRATEGY_NAMES.JWT))
+  @UseInterceptors(FilesInterceptor('files'))
   async create(
     @Request() req: any,
-    @TypedFormData.Body() event: EventDto.CreateEvent,
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [new MaxFileSizeValidator({ maxSize: 50000000 })],
+      }),
+    )
+    files: Array<Express.Multer.File>,
+    @Body() event: EventDto.CreateEvent,
   ): Promise<SingleRecordResponse<EventDto.Root>> {
     return this.eventService
-      .create(req.user, event)
+      .create(req.user, event, files)
       .then((response) =>
         ResponseWrap.single(
           EventDto.createFromEntity(

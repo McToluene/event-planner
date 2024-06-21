@@ -15,12 +15,14 @@ export class EventService {
   constructor(
     @InjectRepository(Event)
     private eventRepository: Repository<Event>,
-    @InjectRepository(Itinerary)
-    private itenaryRepository: Repository<Itinerary>,
     private mediaService: MediaService,
   ) {}
 
-  async create(user: User, event: EventDto.CreateEvent): Promise<Event> {
+  async create(
+    user: User,
+    event: EventDto.CreateEvent,
+    files: Express.Multer.File[],
+  ): Promise<Event> {
     const existingEvent = await this.findByNameAndUser(user, event.name);
     if (existingEvent != null)
       throw new ConflictException(
@@ -28,7 +30,7 @@ export class EventService {
       );
 
     const responses = await Promise.all(
-      event.files.map((file) =>
+      files.map((file) =>
         this.mediaService.upload(
           MediaProviderEnum.CLOUDINARY,
           file,
@@ -49,14 +51,15 @@ export class EventService {
     entity.user = user;
 
     await this.eventRepository.manager.transaction(async (entityManager) => {
-      entity = await entityManager.save(entity);
-      if (entity) {
-        const itineraries = entity.itineraries.map((it) =>
-          new ItineraryDto.Root(it).getEntity(),
-        );
-        await this.itenaryRepository.save(itineraries);
-      }
+      entity = await entityManager.save(Event, entity);
+      const itineraries = entity.itineraries.map((it) => {
+        const itinerary = new ItineraryDto.Root(it).getEntity();
+        itinerary.event = entity;
+        return itinerary;
+      });
+      entity.itineraries = await entityManager.save(Itinerary, itineraries);
     });
+
     return entity;
   }
 
@@ -69,6 +72,7 @@ export class EventService {
   async getEvents(user: User): Promise<Event[]> {
     return this.eventRepository.find({
       where: [{ user }],
+      relations: ['itineraries'],
     });
   }
 }
