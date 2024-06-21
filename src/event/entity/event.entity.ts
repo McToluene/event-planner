@@ -2,6 +2,7 @@ import { BaseEntity } from '@/common/entity/base';
 import { User } from '@/user/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Itinerary } from './itinerary.entity';
+import { Guest } from './guest.entity';
 
 @Entity('events')
 export class Event extends BaseEntity {
@@ -28,4 +29,7 @@ export class Event extends BaseEntity {
 
   @OneToMany(() => Itinerary, (itinerary) => itinerary.event)
   itineraries: Itinerary[];
+
+  @OneToMany(() => Guest, (guest) => guest.event)
+  guests: Guest[];
 }

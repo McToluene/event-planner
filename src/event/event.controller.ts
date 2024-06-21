@@ -15,7 +15,7 @@ import {
   ResponseWrap,
   SingleRecordResponse,
 } from '@/common/dto/abstract/response.abstract';
-import { TypedRoute } from '@nestia/core';
+import { TypedParam, TypedRoute } from '@nestia/core';
 import { AuthGuard } from '@nestjs/passport';
 import { STRATEGY_NAMES } from '@/common/constants';
 import { ConfigService } from '@nestjs/config';
@@ -62,9 +62,9 @@ export class EventController {
   }
 
   /**
-   * Get an event.
+   * Get events.
    * @tag event
-   * @operationId getEvent
+   * @operationId getEvents
    *
    * @returns {Promise<ManyRecordsResponse<EventDto.Root>>} - list events
    */
@@ -82,6 +82,56 @@ export class EventController {
               ev,
               this.config.get<string>('FRONTEND_URL') + ev.id,
             ),
+          ),
+        ),
+      );
+  }
+
+  /**
+   * Get an event.
+   * @tag event
+   * @operationId getEvent
+   * @param id The id of the event.
+   *
+   * @returns {Promise<SingleRecordResponse<EventDto.Root>>} - get event
+   */
+  @TypedRoute.Get(':id')
+  async getEvent(
+    @TypedParam('id') id: string,
+  ): Promise<SingleRecordResponse<EventDto.Root>> {
+    return this.eventService
+      .getEvent(id)
+      .then((response) =>
+        ResponseWrap.single(
+          EventDto.createFromEntity(
+            response,
+            this.config.get<string>('FRONTEND_URL') + response.id,
+          ),
+        ),
+      );
+  }
+
+  /**
+   * Attend event.
+   * @tag event
+   * @operationId attendEvent
+   * @param id The id of the event.
+   *
+   * @returns {Promise<SingleRecordResponse<EventDto.Root>>} - Attend event
+   */
+  @TypedRoute.Post('/attend/:id')
+  @UseGuards(AuthGuard(STRATEGY_NAMES.JWT))
+  async attendEvent(
+    @Request() req: any,
+    @TypedParam('id') id: string,
+  ): Promise<SingleRecordResponse<EventDto.Root>> {
+    return this.eventService
+      .attendEvent(req.user, id)
+      .then((response) =>
+        ResponseWrap.single(
+          EventDto.createFromEntity(
+            response,
+            this.config.get<string>('FRONTEND_URL') + response.id,
           ),
         ),
       );

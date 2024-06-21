@@ -1,4 +1,9 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entity/event.entity';
 import { Repository } from 'typeorm';
@@ -9,12 +14,15 @@ import { ImageType } from '@/common/enum/image.type.enum';
 import { EventDto } from './dto/event.dto';
 import { Itinerary } from './entity/itinerary.entity';
 import { ItineraryDto } from './dto/itinerary.dto';
+import { Guest } from './entity/guest.entity';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(Event)
     private eventRepository: Repository<Event>,
+    @InjectRepository(Guest)
+    private guestRepository: Repository<Guest>,
     private mediaService: MediaService,
   ) {}
 
@@ -59,7 +67,6 @@ export class EventService {
       });
       entity.itineraries = await entityManager.save(Itinerary, itineraries);
     });
-
     return entity;
   }
 
@@ -74,5 +81,28 @@ export class EventService {
       where: [{ user }],
       relations: ['itineraries'],
     });
+  }
+
+  async getEvent(id: string): Promise<Event> {
+    const event = await this.eventRepository.findOne({
+      where: { id },
+      relations: ['itineraries', 'guests', 'guests.user'],
+    });
+    if (!event) throw new NotFoundException(`Event with id: '${id}' not found`);
+    return event;
+  }
+
+  async attendEvent(user: User, id: string): Promise<Event> {
+    const event = await this.getEvent(id);
+    if (event.user === user)
+      throw new NotAcceptableException("You're the event host");
+
+    const isAlreadyGuest = event.guests.filter((guest) => guest.user === user);
+    if (isAlreadyGuest.length > 0)
+      throw new ConflictException("You're already a guest");
+
+    const guest = await this.guestRepository.save({ event, user });
+    event.guests.push(guest);
+    return event;
   }
 }

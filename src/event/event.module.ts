@@ -6,11 +6,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Event } from './entity/event.entity';
 import { MediaModule } from '@/media/media.module';
 import { Itinerary } from './entity/itinerary.entity';
+import { Guest } from './entity/guest.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([Event, Itinerary]),
+    TypeOrmModule.forFeature([Event, Itinerary, Guest]),
     MediaModule,
   ],
   providers: [EventService],
