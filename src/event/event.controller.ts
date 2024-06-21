@@ -110,30 +110,4 @@ export class EventController {
         ),
       );
   }
-
-  /**
-   * Attend event.
-   * @tag event
-   * @operationId attendEvent
-   * @param id The id of the event.
-   *
-   * @returns {Promise<SingleRecordResponse<EventDto.Root>>} - Attend event
-   */
-  @TypedRoute.Post('/attend/:id')
-  @UseGuards(AuthGuard(STRATEGY_NAMES.JWT))
-  async attendEvent(
-    @Request() req: any,
-    @TypedParam('id') id: string,
-  ): Promise<SingleRecordResponse<EventDto.Root>> {
-    return this.eventService
-      .attendEvent(req.user, id)
-      .then((response) =>
-        ResponseWrap.single(
-          EventDto.createFromEntity(
-            response,
-            this.config.get<string>('FRONTEND_URL') + response.id,
-          ),
-        ),
-      );
-  }
 }

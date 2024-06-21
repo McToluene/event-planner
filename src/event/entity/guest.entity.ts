@@ -1,5 +1,5 @@
 import { BaseEntity } from '@/common/entity/base';
-import { Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Event } from './event.entity';
 import { User } from '@/user/entities/user.entity';
 
@@ -11,4 +11,7 @@ export class Guest extends BaseEntity {
   @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
+
+  @Column({ name: 'is_blocked', default: false, nullable: false })
+  isBlocked: boolean;
 }

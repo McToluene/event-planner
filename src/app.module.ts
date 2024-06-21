@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { EventModule } from './event/event.module';
 import { MediaModule } from './media/media.module';
+import { GuestModule } from './guest/guest.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { MediaModule } from './media/media.module';
     UserModule,
     EventModule,
     MediaModule,
+    GuestModule,
   ],
   controllers: [AppController],
   providers: [AppService],

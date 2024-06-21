@@ -8,6 +8,7 @@ export namespace GuestDto {
       id: string;
       name: string;
     };
+    isBlocked: boolean;
 
     getEntity() {
       throw new Error('Method not implemented.');
@@ -21,6 +22,7 @@ export namespace GuestDto {
       id: entity.user.id,
       name: entity.user.fullName,
     };
+    dto.isBlocked = entity.isBlocked;
     return dto;
   }
 }
