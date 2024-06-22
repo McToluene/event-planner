@@ -2,6 +2,7 @@ import { BaseEntity } from '@/common/entity/base';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { UserOauth } from './user-oauth.entity';
 import { Event } from '@/event/entity/event.entity';
+import { Post } from '@/post/entity/post.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -34,4 +35,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Event, (event) => event.user)
   events: Event[];
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 }

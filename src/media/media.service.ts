@@ -9,7 +9,7 @@ export class MediaService {
 
   async upload(
     provider: MediaProviderEnum,
-    file: Express.Multer.File,
+    file: Buffer,
     imageType: ImageType,
   ): Promise<{ url: string; publicId: string } | null> {
     const mediaProvider = this.providerFactory.getDriveProvider(provider);

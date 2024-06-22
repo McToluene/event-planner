@@ -13,7 +13,6 @@ export namespace ItineraryDto {
 
     getEntity() {
       const entity = new Itinerary();
-      entity.id = this.id;
       entity.startTime = this.startTime;
       entity.endTime = this.endTime;
       entity.title = this.title;

@@ -37,7 +37,7 @@ export class EventService {
       files.map((file) =>
         this.mediaService.upload(
           MediaProviderEnum.CLOUDINARY,
-          file,
+          file.buffer,
           ImageType.EVENT,
         ),
       ),

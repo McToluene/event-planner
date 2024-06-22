@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { EventModule } from './event/event.module';
 import { MediaModule } from './media/media.module';
 import { GuestModule } from './guest/guest.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { GuestModule } from './guest/guest.module';
     EventModule,
     MediaModule,
     GuestModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -7,12 +7,11 @@ export namespace GuestDto {
     user: {
       id: string;
       name: string;
+      avatar: string;
     };
     isBlocked: boolean;
 
-    getEntity() {
-      throw new Error('Method not implemented.');
-    }
+    getEntity() {}
   }
 
   export function createFromEntity(entity: Guest) {
@@ -21,6 +20,7 @@ export namespace GuestDto {
     dto.user = {
       id: entity.user.id,
       name: entity.user.fullName,
+      avatar: '',
     };
     dto.isBlocked = entity.isBlocked;
     return dto;

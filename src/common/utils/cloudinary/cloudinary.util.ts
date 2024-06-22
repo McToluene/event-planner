@@ -17,7 +17,7 @@ export class CloudinaryProvider implements IMediaProvider {
   }
 
   async uploadFile(
-    file: Express.Multer.File,
+    file: Buffer,
     type: ImageType,
   ): Promise<{ url: string; publicId: string } | null> {
     try {
@@ -33,7 +33,7 @@ export class CloudinaryProvider implements IMediaProvider {
               else resolve(result);
             },
           );
-          uploadStream.end(file.buffer);
+          uploadStream.end(file);
         },
       );
 
