@@ -4,6 +4,7 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Itinerary } from './itinerary.entity';
 import { Guest } from './guest.entity';
 import { Post } from '@/post/entity/post.entity';
+import { EventLike } from './event-like.entity';
 
 @Entity('events')
 export class Event extends BaseEntity {
@@ -36,4 +37,7 @@ export class Event extends BaseEntity {
 
   @OneToMany(() => Post, (post) => post.event)
   posts: Post[];
+
+  @OneToMany(() => EventLike, (like) => like.event)
+  likes: EventLike[];
 }

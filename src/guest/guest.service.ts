@@ -19,7 +19,7 @@ export class GuestService {
   ) {}
 
   async attendEvent(user: any, id: string): Promise<Event> {
-    const event = await this.eventService.getEvent(id);
+    const event = await this.eventService.findById(id);
     if (event.user === user)
       throw new NotAcceptableException("You're the event host");
 

@@ -15,6 +15,7 @@ export namespace PostDto {
       name: string;
       avatar: string;
     };
+    likes: number;
 
     getEntity() {
       const entity = new Post();
@@ -33,10 +34,11 @@ export namespace PostDto {
     dto.user = {
       id: entity.user.id,
       name: entity.user.fullName,
-      avatar: '',
+      avatar: entity.user.avatar ?? '',
     };
     dto.postType = entity.postType;
     dto.privacy = entity.privacy;
+    dto.likes = entity?.likes?.length;
     return dto;
   }
 

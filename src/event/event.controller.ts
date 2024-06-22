@@ -20,6 +20,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { STRATEGY_NAMES } from '@/common/constants';
 import { ConfigService } from '@nestjs/config';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { EventLikeDto } from './dto/event-like.dto';
 
 @Controller('event')
 export class EventController {
@@ -109,5 +110,41 @@ export class EventController {
           ),
         ),
       );
+  }
+
+  /**
+   * Like an event.
+   * @tag event
+   * @operationId likeEvent
+   * @param id The id of the event.
+   *
+   * @returns {Promise<SingleRecordResponse<EventLikeDto.Root>>} - like data
+   */
+  @TypedRoute.Post(':id/like')
+  @UseGuards(AuthGuard(STRATEGY_NAMES.JWT))
+  async likeEvent(
+    @Request() req: any,
+    @TypedParam('id') id: string,
+  ): Promise<SingleRecordResponse<EventLikeDto.Root>> {
+    return this.eventService
+      .likeEvent(req.user, id)
+      .then((like) => ResponseWrap.single(EventLikeDto.createFromEntity(like)));
+  }
+
+  /**
+   * Unlike an event.
+   * @tag event
+   * @operationId unlikeEvent
+   * @param id The id of the event.
+   *
+   * @returns {Promise<void>}
+   */
+  @TypedRoute.Delete(':id/like')
+  @UseGuards(AuthGuard(STRATEGY_NAMES.JWT))
+  async unlikeEvent(
+    @Request() req: any,
+    @TypedParam('id') id: string,
+  ): Promise<void> {
+    return this.eventService.unlikeEvent(req.user, id);
   }
 }

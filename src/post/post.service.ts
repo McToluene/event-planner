@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './entity/post.entity';
@@ -8,6 +12,7 @@ import { User } from '@/user/entities/user.entity';
 import { MediaProviderEnum } from '@/common/interfaces/media.provide.type';
 import { ImageType } from '@/common/enum/image.type.enum';
 import { MediaService } from '@/media/media.service';
+import { PostLike } from './entity/post-like.entity';
 
 @Injectable()
 export class PostService {
@@ -16,13 +21,16 @@ export class PostService {
     private postRepository: Repository<Post>,
     private eventService: EventService,
     private mediaService: MediaService,
+    @InjectRepository(PostLike)
+    private postLikeRepository: Repository<PostLike>,
   ) {}
+
   async create(
     user: User,
     eventId: string,
     post: PostDto.CreatePost,
   ): Promise<Post> {
-    const event = await this.eventService.getEvent(eventId);
+    const event = await this.eventService.findById(eventId);
     let urls: string[] = [];
     if (post.files) {
       const responses = await Promise.all(
@@ -49,5 +57,36 @@ export class PostService {
     entity.user = user;
     entity.event = event;
     return this.postRepository.save(entity);
+  }
+
+  async getPosts(eventId: string): Promise<Post[]> {
+    const event = await this.eventService.findById(eventId);
+    return this.postRepository.find({
+      where: [{ event }],
+      relations: ['user', 'likes'],
+    });
+  }
+
+  async likePost(user: User, eventId: string): Promise<PostLike> {
+    const post = await this.postRepository.findOne({
+      where: [{ id: eventId }],
+    });
+    if (!post) throw new NotFoundException('Post not found!');
+
+    const existingLike = await this.postLikeRepository.findOne({
+      where: [{ user, post }],
+    });
+    if (existingLike) throw new ConflictException('Post already liked!');
+
+    return this.postLikeRepository.save({ user, post });
+  }
+
+  async unlikePost(user: User, eventId: string): Promise<void> {
+    const post = await this.postRepository.findOne({
+      where: [{ id: eventId }],
+    });
+
+    if (!post) throw new NotFoundException('Post not found!');
+    await this.postLikeRepository.delete({ user, post });
   }
 }

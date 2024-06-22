@@ -6,11 +6,12 @@ import { ConfigModule } from '@nestjs/config';
 import { Post } from './entity/post.entity';
 import { EventModule } from '@/event/event.module';
 import { MediaModule } from '@/media/media.module';
+import { PostLike } from './entity/post-like.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([Post]),
+    TypeOrmModule.forFeature([Post, PostLike]),
     EventModule,
     MediaModule,
   ],

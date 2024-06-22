@@ -2,7 +2,7 @@ import { AbstractDto } from '@/common/dto/abstract/abstract.dto';
 import { Event } from '../entity/event.entity';
 import { ItineraryDto } from './itinerary.dto';
 import { tags } from 'typia';
-import { GuestDto } from './guest.dto';
+import { GuestDto } from '../../guest/dto/guest.dto';
 
 export namespace EventDto {
   export class Root extends AbstractDto {

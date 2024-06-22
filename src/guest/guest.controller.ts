@@ -9,11 +9,11 @@ import { TypedParam, TypedRoute } from '@nestia/core';
 import { Controller, UseGuards, Request } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GuestService } from './guest.service';
-import { GuestDto } from '@/event/dto/guest.dto';
 import { EventDto } from '@/event/dto/event.dto';
 import { ConfigService } from '@nestjs/config';
 import { EventHostGuard } from '@/common/guard/host.guard';
 import { AllowHosts } from '@/common/decorator/allow-host.decorator';
+import { GuestDto } from './dto/guest.dto';
 
 @Controller('event/:eventId/guest')
 export class GuestController {
@@ -74,7 +74,7 @@ export class GuestController {
   }
 
   /**
-   * Chage event guest block status.
+   * Change event guest block status.
    * @tag guest
    * @operationId changeGuestBlockStatus
    * @param eventId The id of the event.

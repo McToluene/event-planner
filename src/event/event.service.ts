@@ -13,6 +13,7 @@ import { ImageType } from '@/common/enum/image.type.enum';
 import { EventDto } from './dto/event.dto';
 import { Itinerary } from './entity/itinerary.entity';
 import { ItineraryDto } from './dto/itinerary.dto';
+import { EventLike } from './entity/event-like.entity';
 
 @Injectable()
 export class EventService {
@@ -20,6 +21,8 @@ export class EventService {
     @InjectRepository(Event)
     private eventRepository: Repository<Event>,
     private mediaService: MediaService,
+    @InjectRepository(EventLike)
+    private eventLikeRepository: Repository<EventLike>,
   ) {}
 
   async create(
@@ -88,10 +91,50 @@ export class EventService {
   async getEvent(id: string): Promise<Event> {
     const event = await this.eventRepository.findOne({
       where: { id },
-      relations: ['itineraries', 'guests', 'guests.user'],
+      relations: [
+        'itineraries',
+        'user',
+        'guests',
+        'guests.user',
+        'posts',
+        'posts.user',
+      ],
     });
 
     if (!event) throw new NotFoundException(`Event with id: '${id}' not found`);
     return event;
+  }
+
+  async findById(id: string): Promise<Event> {
+    const event = await this.eventRepository.findOne({
+      where: [{ id }],
+      relations: ['user'],
+    });
+
+    if (!event) throw new NotFoundException(`Event with id: '${id}' not found`);
+    return event;
+  }
+
+  async likeEvent(user: User, eventId: string): Promise<EventLike> {
+    const event = await this.eventRepository.findOne({
+      where: [{ id: eventId }],
+    });
+    if (!event) throw new NotFoundException('Event not found!');
+
+    const existingLike = await this.eventLikeRepository.findOne({
+      where: [{ user, event }],
+    });
+
+    if (existingLike) throw new ConflictException('Event already liked!');
+    return this.eventLikeRepository.save({ user, event });
+  }
+
+  async unlikeEvent(user: User, eventId: string): Promise<void> {
+    const event = await this.eventRepository.findOne({
+      where: [{ id: eventId }],
+    });
+
+    if (!event) throw new NotFoundException('Event not found!');
+    await this.eventLikeRepository.delete({ user, event });
   }
 }

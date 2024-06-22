@@ -1,5 +1,5 @@
 import { AbstractDto } from '@/common/dto/abstract/abstract.dto';
-import { Guest } from '../entity/guest.entity';
+import { Guest } from '../../event/entity/guest.entity';
 
 export namespace GuestDto {
   export class Root extends AbstractDto {
@@ -20,7 +20,7 @@ export namespace GuestDto {
     dto.user = {
       id: entity.user.id,
       name: entity.user.fullName,
-      avatar: '',
+      avatar: entity.user.avatar ?? '',
     };
     dto.isBlocked = entity.isBlocked;
     return dto;
