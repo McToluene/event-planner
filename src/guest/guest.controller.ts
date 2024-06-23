@@ -51,7 +51,7 @@ export class GuestController {
   }
 
   /**
-   * Guests event.
+   * Event guests.
    * @tag guest
    * @operationId guests
    * @param eventId The id of the event.
@@ -74,7 +74,7 @@ export class GuestController {
   }
 
   /**
-   * Change event guest block status.
+   * Change guest block status.
    * @tag guest
    * @operationId changeGuestBlockStatus
    * @param eventId The id of the event.
