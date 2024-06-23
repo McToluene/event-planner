@@ -1,5 +1,5 @@
 import { BaseEntity } from '@/common/entity/base';
-import { User } from '@/user/entities/user.entity';
+import { User } from '@/user/entity/user.entity';
 
 import { Entity, ManyToOne } from 'typeorm';
 import { Post } from './post.entity';

@@ -9,11 +9,8 @@ import { UserService } from '@/user/user.service';
 import { HashHelper } from '@/common/helper/hash.helper';
 import { JwtService } from '@nestjs/jwt';
 import { IFacebookUser, IGoogleUser } from './interfaces/provider.interface';
-import { User } from '@/user/entities/user.entity';
-import {
-  OAuthProvidersEnum,
-  UserOauth,
-} from '@/user/entities/user-oauth.entity';
+import { User } from '@/user/entity/user.entity';
+import { OAuthProvidersEnum, UserOauth } from '@/user/entity/user-oauth.entity';
 import { UserOauthService } from '@/user/user-oauth.service';
 
 @Injectable()

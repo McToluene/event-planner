@@ -11,7 +11,9 @@ export namespace GuestDto {
     };
     isBlocked: boolean;
 
-    getEntity() {}
+    getEntity() {
+      throw new Error('Method not implemented.');
+    }
   }
 
   export function createFromEntity(entity: Guest) {

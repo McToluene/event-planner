@@ -1,5 +1,5 @@
 import { AbstractDto } from '@/common/dto/abstract/abstract.dto';
-import { User } from '@/user/entities/user.entity';
+import { User } from '@/user/entity/user.entity';
 
 export namespace AuthDto {
   export class Root extends AbstractDto {

@@ -10,7 +10,7 @@ import { AuthDto } from './dto/auth.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { STRATEGY_NAMES } from '@/common/constants';
 import { CurrentUser } from './decorator/current-user.decorator';
-import { User } from '@/user/entities/user.entity';
+import { User } from '@/user/entity/user.entity';
 
 @Controller('auth')
 export class AuthController {

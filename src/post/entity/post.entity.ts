@@ -2,7 +2,7 @@ import { BaseEntity } from '@/common/entity/base';
 import { Event } from '@/event/entity/event.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { PostType } from '../enum/post-type.enum';
-import { User } from '@/user/entities/user.entity';
+import { User } from '@/user/entity/user.entity';
 import { Privacy } from '../enum/privacy.enum';
 import { PostLike } from './post-like.entity';
 

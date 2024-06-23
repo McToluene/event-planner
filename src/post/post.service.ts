@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { Post } from './entity/post.entity';
 import { PostDto } from './dto/post.dto';
 import { EventService } from '@/event/event.service';
-import { User } from '@/user/entities/user.entity';
+import { User } from '@/user/entity/user.entity';
 import { MediaProviderEnum } from '@/common/interfaces/media.provide.type';
 import { ImageType } from '@/common/enum/image.type.enum';
 import { MediaService } from '@/media/media.service';
@@ -77,7 +77,6 @@ export class PostService {
       where: [{ user, post }],
     });
     if (existingLike) throw new ConflictException('Post already liked!');
-
     return this.postLikeRepository.save({ user, post });
   }
 

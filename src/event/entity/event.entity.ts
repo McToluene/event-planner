@@ -1,5 +1,5 @@
 import { BaseEntity } from '@/common/entity/base';
-import { User } from '@/user/entities/user.entity';
+import { User } from '@/user/entity/user.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Itinerary } from './itinerary.entity';
 import { Guest } from './guest.entity';

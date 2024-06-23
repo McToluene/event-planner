@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
+import { MediaService } from '@/media/media.service';
+import { MediaProviderEnum } from '@/common/interfaces/media.provide.type';
+import { ImageType } from '@/common/enum/image.type.enum';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private mediaService: MediaService,
   ) {}
 
   async create(user: User): Promise<User> {
@@ -30,5 +34,17 @@ export class UserService {
 
   async update(user: User): Promise<User> {
     return this.userRepository.save(user);
+  }
+
+  async addAvatar(user: User, file: File): Promise<User> {
+    const arrayBuffer = await file.arrayBuffer();
+    const response = await this.mediaService.upload(
+      MediaProviderEnum.CLOUDINARY,
+      Buffer.from(arrayBuffer),
+      ImageType.USER,
+    );
+
+    user.avatar = response?.url;
+    return await this.userRepository.save(user);
   }
 }
