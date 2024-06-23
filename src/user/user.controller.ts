@@ -26,7 +26,7 @@ export class UserController {
    *
    * @returns {Promise<SingleRecordResponse<EventDto.Root>>} - Updated user
    */
-  @TypedRoute.Post(':id/avatar')
+  @TypedRoute.Post('avatar')
   async addAvatar(
     @Request() req: any,
     @TypedFormData.Body() input: UserDto.AddAvatar,
