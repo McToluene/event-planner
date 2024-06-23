@@ -18,6 +18,8 @@ export namespace EventDto {
     updatedAt: Date;
     itineraries: ItineraryDto.Root[] | [];
     guests: GuestDto.Root[] | [];
+    likes: number;
+    posts: number;
 
     getEntity() {
       const entity = new Event();
@@ -50,6 +52,8 @@ export namespace EventDto {
     dto.itineraries =
       entity.itineraries?.map(ItineraryDto.createFromEntity) ?? [];
     dto.guests = entity.guests?.map(GuestDto.createFromEntity) ?? [];
+    dto.likes = entity?.likes?.length;
+    dto.posts = entity?.posts?.length;
     return dto;
   }
 

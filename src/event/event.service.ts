@@ -84,7 +84,15 @@ export class EventService {
   async getEvents(user: User): Promise<Event[]> {
     return this.eventRepository.find({
       where: [{ user }],
-      relations: ['itineraries'],
+      relations: [
+        'itineraries',
+        'user',
+        'guests',
+        'guests.user',
+        'posts',
+        'posts.user',
+        'likes',
+      ],
     });
   }
 
@@ -98,6 +106,7 @@ export class EventService {
         'guests.user',
         'posts',
         'posts.user',
+        'likes',
       ],
     });
 
