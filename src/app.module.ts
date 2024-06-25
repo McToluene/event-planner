@@ -11,6 +11,7 @@ import { EventModule } from './event/event.module';
 import { MediaModule } from './media/media.module';
 import { GuestModule } from './guest/guest.module';
 import { PostModule } from './post/post.module';
+import { LanguageModule } from './language/language.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { PostModule } from './post/post.module';
     MediaModule,
     GuestModule,
     PostModule,
+    LanguageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
