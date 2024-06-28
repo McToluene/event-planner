@@ -17,10 +17,15 @@ export namespace LanguageDto {
 
   export function createFromEntity(entity: Language) {
     const dto: Root = new Root();
+    dto.id = entity.id;
     dto.code = entity.code;
     dto.name = entity.name;
     return dto;
   }
 
   export type CreateLanguage = Pick<Root, 'name' | 'code'>;
+
+  export type Translate = {
+    text: string;
+  };
 }

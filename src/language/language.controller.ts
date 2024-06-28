@@ -1,4 +1,4 @@
-import { Controller, UseGuards } from '@nestjs/common';
+import { Controller, UseGuards, Request } from '@nestjs/common';
 import { LanguageService } from './language.service';
 import { AuthGuard } from '@nestjs/passport';
 import { STRATEGY_NAMES } from '@/common/constants';
@@ -34,7 +34,7 @@ export class LanguageController {
   }
 
   /**
-   * Get languagse.
+   * Get languages.
    * @tag language
    * @operationId getLanguages
    *
@@ -49,5 +49,23 @@ export class LanguageController {
           languages.map((l) => LanguageDto.createFromEntity(l)),
         ),
       );
+  }
+
+  /**
+   * Transalate text.
+   * @tag language
+   * @operationId translateText
+   *
+   * @returns {Promise<SingleRecordResponse<string>>} - translated text
+   */
+  @TypedRoute.Post('translate')
+  @UseGuards(AuthGuard(STRATEGY_NAMES.JWT))
+  async translateText(
+    @Request() req: any,
+    @TypedBody() body: LanguageDto.Translate,
+  ): Promise<SingleRecordResponse<string>> {
+    return this.languageService
+      .translate(req.user, body.text)
+      .then((response) => ResponseWrap.single(response));
   }
 }

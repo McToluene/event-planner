@@ -55,8 +55,11 @@ export class UserService {
   }
 
   async updateProfile(user: User, body: UserDto.Profile): Promise<User> {
-    const language = await this.languageService.getById(body.languageId);
-    user.language = language;
+    if (body.languageId) {
+      const language = await this.languageService.getById(body.languageId);
+      user.language = language;
+    }
+
     user.fullName = body.fullName;
     user.phoneNumber = body.phoneNumber;
     return this.update(user);

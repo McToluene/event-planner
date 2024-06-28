@@ -23,7 +23,7 @@ export class GuestService {
     if (event.user === user)
       throw new NotAcceptableException("You're the event host");
 
-    const isAlreadyGuest = event.guests.filter((guest) => guest.user === user);
+    const isAlreadyGuest = event.guests?.filter((guest) => guest.user === user);
     if (isAlreadyGuest.length > 0)
       throw new ConflictException("You're already a guest");
 
