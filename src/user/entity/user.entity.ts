@@ -1,10 +1,11 @@
 import { BaseEntity } from '@/common/entity/base';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { UserOauth } from './user-oauth.entity';
 import { Event } from '@/event/entity/event.entity';
 import { Post } from '@/post/entity/post.entity';
 import { EventLike } from '@/event/entity/event-like.entity';
 import { PostLike } from '@/post/entity/post-like.entity';
+import { Language } from '@/language/entity/language.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -46,4 +47,8 @@ export class User extends BaseEntity {
 
   @OneToMany(() => PostLike, (like) => like.user)
   postLikes: PostLike[];
+
+  @ManyToOne(() => Language)
+  @JoinColumn({ name: 'language_id' })
+  language: Language;
 }

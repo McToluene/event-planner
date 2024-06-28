@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { LanguageDto } from './dto/language.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Language } from './entity/language.entity';
@@ -34,5 +38,11 @@ export class LanguageService {
 
   async get(): Promise<Language[]> {
     return this.languageRepository.find();
+  }
+
+  async getById(id: string): Promise<Language> {
+    const language = await this.languageRepository.findOne({ where: [{ id }] });
+    if (language === null) throw new NotFoundException('Language not found');
+    return language;
   }
 }

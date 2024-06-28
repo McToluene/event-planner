@@ -7,6 +7,7 @@ import { Language } from './entity/language.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Language])],
   providers: [LanguageService],
+  exports: [LanguageService],
   controllers: [LanguageController],
 })
 export class LanguageModule {}

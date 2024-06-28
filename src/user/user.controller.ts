@@ -3,7 +3,7 @@ import {
   ResponseWrap,
   SingleRecordResponse,
 } from '@/common/dto/abstract/response.abstract';
-import { TypedFormData, TypedRoute } from '@nestia/core';
+import { TypedBody, TypedFormData, TypedRoute } from '@nestia/core';
 import {
   BadRequestException,
   Controller,
@@ -24,7 +24,7 @@ export class UserController {
    * @tag user
    * @operationId addAvatar
    *
-   * @returns {Promise<SingleRecordResponse<EventDto.Root>>} - Updated user
+   * @returns {Promise<SingleRecordResponse<UserDto.Root>>} - Updated user
    */
   @TypedRoute.Post('avatar')
   async addAvatar(
@@ -42,6 +42,23 @@ export class UserController {
 
     return this.userService
       .addAvatar(req.user, input.file)
+      .then((u) => ResponseWrap.single(UserDto.createFromEntity(u)));
+  }
+
+  /**
+   * Update profile.
+   * @tag user
+   * @operationId updateProfile
+   *
+   * @returns {Promise<SingleRecordResponse<UserDto.Root>>} - Updated user
+   */
+  @TypedRoute.Post()
+  async updateProfile(
+    @Request() req: any,
+    @TypedBody() body: UserDto.Profile,
+  ): Promise<SingleRecordResponse<UserDto.Root>> {
+    return this.userService
+      .updateProfile(req.user, body)
       .then((u) => ResponseWrap.single(UserDto.createFromEntity(u)));
   }
 }

@@ -27,4 +27,8 @@ export namespace UserDto {
   export type AddAvatar = {
     file: File;
   };
+
+  export type Profile = Pick<Root, 'fullName' | 'phoneNumber'> & {
+    languageId: string;
+  };
 }

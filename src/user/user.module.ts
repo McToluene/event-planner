@@ -7,12 +7,14 @@ import { UserOauthService } from './user-oauth.service';
 import { UserOauth } from './entity/user-oauth.entity';
 import { UserController } from './user.controller';
 import { MediaModule } from '@/media/media.module';
+import { LanguageModule } from '@/language/language.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forFeature([User, UserOauth]),
     MediaModule,
+    LanguageModule,
   ],
   providers: [UserService, UserOauthService],
   exports: [UserService, UserOauthService],
