@@ -53,27 +53,33 @@ export class LanguageService {
   }
 
   async translate(user: User, text: string): Promise<string> {
-    if (!user.language) throw new NotFoundException('');
+    try {
+      if (!user.language) throw new NotFoundException('');
 
-    const apiKey = this.configService.get<string>('OPENAI_API_KEY');
-    const prompt = `Translate the following text to ${user?.language.name}: "${text}"`;
-    const response = await firstValueFrom(
-      this.httpService.post(
-        'https://api.openai.com/v1/engines/davinci-codex/completions',
-        {
-          prompt,
-          max_tokens: 100,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
+      const apiKey = this.configService.get<string>('OPENAI_API_KEY');
+
+      const prompt = `Translate the following text to ${user?.language.name}: "${text}"`;
+      const response = await firstValueFrom(
+        this.httpService.post(
+          'https://api.openai.com/v1/completions',
+          {
+            model: 'gpt-3.5-turbo-instruct',
+            prompt,
+            max_tokens: 100,
           },
-        },
-      ),
-    );
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${apiKey}`,
+            },
+          },
+        ),
+      );
 
-    const translatedText = response.data.choices[0].text.trim();
-    return translatedText;
+      const translatedText = response.data.choices[0].text.trim();
+      return translatedText;
+    } catch (error) {
+      throw new NotFoundException('Translation not found');
+    }
   }
 }
