@@ -46,11 +46,13 @@ export class PostController {
    * @returns {Promise<ManyRecordsResponse<PostDto.Root>>} - post
    */
   @TypedRoute.Get()
+  @UseGuards(AuthGuard(STRATEGY_NAMES.JWT))
   async getPosts(
+    @Request() req: any,
     @TypedParam('eventId') eventId: string,
   ): Promise<ManyRecordsResponse<PostDto.Root>> {
     return this.postService
-      .getPosts(eventId)
+      .getPosts(req.user, eventId)
       .then((posts) =>
         ResponseWrap.many(posts.map((p) => PostDto.createFromEntity(p))),
       );

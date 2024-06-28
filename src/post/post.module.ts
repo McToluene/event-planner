@@ -7,11 +7,12 @@ import { Post } from './entity/post.entity';
 import { EventModule } from '@/event/event.module';
 import { MediaModule } from '@/media/media.module';
 import { PostLike } from './entity/post-like.entity';
+import { PostView } from './entity/post-view';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([Post, PostLike]),
+    TypeOrmModule.forFeature([Post, PostLike, PostView]),
     EventModule,
     MediaModule,
   ],

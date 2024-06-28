@@ -5,6 +5,7 @@ import { PostType } from '../enum/post-type.enum';
 import { User } from '@/user/entity/user.entity';
 import { Privacy } from '../enum/privacy.enum';
 import { PostLike } from './post-like.entity';
+import { PostView } from './post-view';
 
 @Entity('posts')
 export class Post extends BaseEntity {
@@ -30,4 +31,7 @@ export class Post extends BaseEntity {
 
   @OneToMany(() => PostLike, (like) => like.post)
   likes: PostLike[];
+
+  @OneToMany(() => PostView, (view) => view.post)
+  views: PostView[];
 }

@@ -93,6 +93,9 @@ export class EventService {
         'posts.user',
         'likes',
       ],
+      order: {
+        createdAt: 'DESC',
+      },
     });
   }
 

@@ -59,11 +59,22 @@ export class PostService {
     return this.postRepository.save(entity);
   }
 
-  async getPosts(eventId: string): Promise<Post[]> {
+  async getPosts(user: User, eventId: string): Promise<Post[]> {
     const event = await this.eventService.findById(eventId);
-    return this.postRepository.find({
-      where: [{ event }],
-      relations: ['user', 'likes'],
+
+    return this.postRepository.manager.transaction(async (entityManager) => {
+      const posts = await entityManager.find(Post, {
+        where: [{ event }],
+        relations: ['user', 'likes'],
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+      if (posts) {
+        user.lastFetchedPosts = posts[0].createdAt;
+        await entityManager.save(User, user);
+      }
+      return posts;
     });
   }
 

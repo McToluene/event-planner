@@ -6,6 +6,7 @@ import { Post } from '@/post/entity/post.entity';
 import { EventLike } from '@/event/entity/event-like.entity';
 import { PostLike } from '@/post/entity/post-like.entity';
 import { Language } from '@/language/entity/language.entity';
+import { PostView } from '@/post/entity/post-view';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -51,4 +52,10 @@ export class User extends BaseEntity {
   @ManyToOne(() => Language)
   @JoinColumn({ name: 'language_id' })
   language: Language;
+
+  @OneToMany(() => PostView, (view) => view.user)
+  postViews: PostView[];
+
+  @Column({ type: 'timestamp', nullable: true })
+  lastFetchedPosts: Date;
 }
