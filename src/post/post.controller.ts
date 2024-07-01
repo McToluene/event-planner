@@ -96,4 +96,22 @@ export class PostController {
   ): Promise<void> {
     return this.postService.unlikePost(req.user, id);
   }
+
+  /**
+   * Get count of new posts.
+   * @tag post
+   * @operationId checkLatest
+   * @param eventId The id of the event.
+   *
+   * @returns {Promise<SingleRecordResponse<number>>}
+   */
+  @TypedRoute.Get('latest')
+  async checkLatest(
+    @Request() req: any,
+    @TypedParam('eventId') eventId: string,
+  ): Promise<SingleRecordResponse<number>> {
+    return this.postService
+      .checkLatest(req.user, eventId)
+      .then((count) => ResponseWrap.single(count));
+  }
 }

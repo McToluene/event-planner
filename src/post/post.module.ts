@@ -8,7 +8,6 @@ import { EventModule } from '@/event/event.module';
 import { MediaModule } from '@/media/media.module';
 import { PostLike } from './entity/post-like.entity';
 import { PostView } from './entity/post-view';
-import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -16,9 +15,6 @@ import { BullModule } from '@nestjs/bull';
     TypeOrmModule.forFeature([Post, PostLike, PostView]),
     EventModule,
     MediaModule,
-    BullModule.registerQueue({
-      name: 'post',
-    }),
   ],
   providers: [PostService],
   controllers: [PostController],
