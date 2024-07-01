@@ -25,7 +25,7 @@ export class PostService {
     private mediaService: MediaService,
     @InjectRepository(PostLike)
     private postLikeRepository: Repository<PostLike>,
-    @InjectQueue('post') private audioQueue: Queue,
+    @InjectQueue('post') private postQueue: Queue,
   ) {}
 
   async create(
@@ -60,6 +60,7 @@ export class PostService {
     entity.user = user;
     entity.event = event;
     entity = await this.postRepository.save(entity);
+    await this.postQueue.add('new-post', entity);
     return entity;
   }
 
