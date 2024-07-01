@@ -13,6 +13,8 @@ import { MediaProviderEnum } from '@/common/interfaces/media.provide.type';
 import { ImageType } from '@/common/enum/image.type.enum';
 import { MediaService } from '@/media/media.service';
 import { PostLike } from './entity/post-like.entity';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
 export class PostService {
@@ -23,6 +25,7 @@ export class PostService {
     private mediaService: MediaService,
     @InjectRepository(PostLike)
     private postLikeRepository: Repository<PostLike>,
+    @InjectQueue('post') private audioQueue: Queue,
   ) {}
 
   async create(
@@ -52,11 +55,12 @@ export class PostService {
         .map((response) => response.url);
     }
 
-    const entity = new PostDto.Root(post).getEntity();
+    let entity = new PostDto.Root(post).getEntity();
     entity.mediaUrls = urls;
     entity.user = user;
     entity.event = event;
-    return this.postRepository.save(entity);
+    entity = await this.postRepository.save(entity);
+    return entity;
   }
 
   async getPosts(user: User, eventId: string): Promise<Post[]> {

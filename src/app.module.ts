@@ -12,6 +12,7 @@ import { MediaModule } from './media/media.module';
 import { GuestModule } from './guest/guest.module';
 import { PostModule } from './post/post.module';
 import { LanguageModule } from './language/language.module';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -44,6 +45,16 @@ import { LanguageModule } from './language/language.module';
     GuestModule,
     PostModule,
     LanguageModule,
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        redis: {
+          host: config.get<string>('REDIS_HOST'),
+          port: config.get<number>('REDIS_PORT'),
+        },
+      }),
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
