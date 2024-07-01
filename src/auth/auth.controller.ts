@@ -55,7 +55,7 @@ export class AuthController {
   @UseGuards(AuthGuard(STRATEGY_NAMES.GOOGLE))
   @TypedRoute.Get('google')
   async googleLogin(): Promise<void> {
-    // The gard will initiate the google login flow
+    // The guard will initiate the google login flow
   }
 
   /**
@@ -77,7 +77,7 @@ export class AuthController {
   @UseGuards(AuthGuard(STRATEGY_NAMES.FACEBOOK))
   @TypedRoute.Get('facebook')
   async facebookLogin(): Promise<void> {
-    // The gard will initiate the facebook login flow
+    // The guard will initiate the facebook login flow
   }
 
   /**
