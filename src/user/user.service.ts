@@ -24,7 +24,7 @@ export class UserService {
   async findById(userId: string): Promise<User | null> {
     return this.userRepository.findOne({
       where: { id: userId },
-      relations: ['language'],
+      relations: ['language', 'events'],
     });
   }
 
@@ -35,6 +35,7 @@ export class UserService {
   async findByEmailOrPhoneNumber(username: string): Promise<User | null> {
     return this.userRepository.findOne({
       where: [{ email: username }, { phoneNumber: username }],
+      relations: ['language', 'events'],
     });
   }
 

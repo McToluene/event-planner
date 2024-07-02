@@ -36,11 +36,12 @@ export class AuthService {
     return this.login(newUser);
   }
 
-  async login(user: any): Promise<AuthDto.AuthResponse> {
+  async login(user: User): Promise<AuthDto.AuthResponse> {
     return {
       accessToken: await this.generateAccessToken({
         email: user.email,
         sub: user.id,
+        event: user?.events[0]?.id,
       }),
     };
   }
