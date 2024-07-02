@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThan, Repository } from 'typeorm';
+import { MoreThan, Not, Repository } from 'typeorm';
 import { Post } from './entity/post.entity';
 import { PostDto } from './dto/post.dto';
 import { EventService } from '@/event/event.service';
@@ -13,6 +13,7 @@ import { MediaProviderEnum } from '@/common/interfaces/media.provide.type';
 import { ImageType } from '@/common/enum/image.type.enum';
 import { MediaService } from '@/media/media.service';
 import { PostLike } from './entity/post-like.entity';
+import { Privacy } from './enum/privacy.enum';
 
 @Injectable()
 export class PostService {
@@ -52,7 +53,7 @@ export class PostService {
         .map((response) => response.url);
     }
 
-    let entity = new PostDto.Root(post).getEntity();
+    const entity = new PostDto.Root(post).getEntity();
     entity.mediaUrls = urls;
     entity.user = user;
     entity.event = event;
@@ -103,7 +104,13 @@ export class PostService {
   async checkLatest(user: User, eventId: string): Promise<number> {
     const event = await this.eventService.findById(eventId);
     return this.postRepository.count({
-      where: [{ event }, { createdAt: MoreThan(user.lastFetchedPosts) }],
+      where: [
+        {
+          event,
+          createdAt: MoreThan(user.lastFetchedPosts),
+          privacy: Not(Privacy.ONLYME),
+        },
+      ],
     });
   }
 }
