@@ -57,5 +57,5 @@ export class User extends BaseEntity {
   postViews: PostView[];
 
   @Column({ type: 'timestamp', nullable: true })
-  lastFetchedPosts: Date;
+  lastFetchedPost: Date;
 }

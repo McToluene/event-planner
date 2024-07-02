@@ -72,7 +72,7 @@ export class PostService {
         },
       });
       if (posts) {
-        user.lastFetchedPosts = posts[0].createdAt;
+        user.lastFetchedPost = posts[0].createdAt;
         await entityManager.save(User, user);
       }
       return posts;
@@ -107,7 +107,7 @@ export class PostService {
       where: [
         {
           event,
-          createdAt: MoreThan(user.lastFetchedPosts),
+          createdAt: MoreThan(user.lastFetchedPost),
           privacy: Not(Privacy.ONLYME),
         },
       ],
