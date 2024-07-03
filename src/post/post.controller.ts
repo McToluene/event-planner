@@ -50,9 +50,11 @@ export class PostController {
   async getPosts(
     @Request() req: any,
     @TypedParam('eventId') eventId: string,
+    @TypedParam('pageNumber') pageNumber: number,
+    @TypedParam('pageSize') pageSize: number,
   ): Promise<ManyRecordsResponse<PostDto.Root>> {
     return this.postService
-      .getPosts(req.user, eventId)
+      .getPosts(req.user, eventId, pageNumber, pageSize)
       .then((posts) =>
         ResponseWrap.many(posts.map((p) => PostDto.createFromEntity(p))),
       );

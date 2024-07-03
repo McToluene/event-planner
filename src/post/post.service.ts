@@ -60,18 +60,27 @@ export class PostService {
     return this.postRepository.save(entity);
   }
 
-  async getPosts(user: User, eventId: string): Promise<Post[]> {
+  async getPosts(
+    user: User,
+    eventId: string,
+    page: number = 1,
+    pageSize: number = 10,
+  ): Promise<Post[]> {
     const event = await this.eventService.findById(eventId);
+    const skip = (page - 1) * pageSize;
+    const take = pageSize;
 
     return this.postRepository.manager.transaction(async (entityManager) => {
       const posts = await entityManager.find(Post, {
-        where: [{ event }],
+        where: { event },
         relations: ['user', 'likes'],
         order: {
           createdAt: 'DESC',
         },
+        skip,
+        take,
       });
-      if (posts) {
+      if (posts.length > 0) {
         user.lastFetchedPost = posts[0].createdAt;
         await entityManager.save(User, user);
       }
