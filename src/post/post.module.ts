@@ -9,6 +9,7 @@ import { MediaModule } from '@/media/media.module';
 import { PostLike } from './entity/post-like.entity';
 import { PostView } from './entity/post-view';
 import { BullModule } from '@nestjs/bull';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { BullModule } from '@nestjs/bull';
     BullModule.registerQueue({
       name: 'post',
     }),
+    CacheModule.register(),
   ],
   providers: [PostService],
   controllers: [PostController],

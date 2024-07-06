@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -14,6 +15,10 @@ import { ImageType } from '@/common/enum/image.type.enum';
 import { MediaService } from '@/media/media.service';
 import { PostLike } from './entity/post-like.entity';
 import { Privacy } from './enum/privacy.enum';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
 export class PostService {
@@ -24,6 +29,8 @@ export class PostService {
     private mediaService: MediaService,
     @InjectRepository(PostLike)
     private postLikeRepository: Repository<PostLike>,
+    @InjectQueue('post') private postQueue: Queue,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async create(
@@ -53,11 +60,13 @@ export class PostService {
         .map((response) => response.url);
     }
 
-    const entity = new PostDto.Root(post).getEntity();
+    let entity = new PostDto.Root(post).getEntity();
     entity.mediaUrls = urls;
     entity.user = user;
     entity.event = event;
-    return this.postRepository.save(entity);
+    entity = await this.postRepository.save(entity);
+    await this.postQueue.add('new-post', entity.id);
+    return entity;
   }
 
   async getPosts(
@@ -110,6 +119,13 @@ export class PostService {
     await this.postLikeRepository.delete({ user, post });
   }
 
+  async findById(id: string): Promise<Post | null> {
+    return this.postRepository.findOne({
+      where: [{ id }],
+      relations: ['event', 'event.guests', 'event.guests.user'],
+    });
+  }
+
   async checkLatest(user: User, eventId: string): Promise<number> {
     const event = await this.eventService.findById(eventId);
     return this.postRepository.count({
@@ -121,5 +137,10 @@ export class PostService {
         },
       ],
     });
+  }
+
+  async getLatestCount(user: User): Promise<number> {
+    const count = await this.cacheManager.get<number>(user.id);
+    return count ?? 0;
   }
 }
